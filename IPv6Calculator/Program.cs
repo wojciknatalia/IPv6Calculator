@@ -20,8 +20,6 @@ namespace IPv6Calculator
                 .WriteTo.Console()
                 .CreateLogger();
 
-            Log.Logger.Information("Application Starting");
-
             IHost host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {

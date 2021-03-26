@@ -18,25 +18,42 @@ namespace IPv6Calculator
 
         public void Run()
         {
-            string ipInput = "2a01:1d8:2:280::/127";
-            _logger.LogInformation("Hardcoded ipInput: " + ipInput);
+            //Test IP addresses:
+            //2a01:1d8:2:280::/58
+            //2a01:1d8:2:280::/127
+            //1:0:0:1:0:0:0:1/1
+
+            Console.WriteLine("Enter an IP Address with mask, e.g. 2a01:1d8:2:280::/58");
+            string ipInput = Console.ReadLine();
+            while (!IpConveter.ValidateAddress(ipInput))
+            {
+                Console.WriteLine("This address is not valid. Please, type the correct one.");
+                ipInput = Console.ReadLine();
+            }
 
             IpAddress ipAddress = new IpAddress(ipInput);
-            _logger.LogInformation("IPAddress params, address: " + ipAddress.Address + ", mask: " + ipAddress.Mask);
-
-            ipAddress.FullAddressNoCols = IpConveter.CalcFullAddress(ipAddress.Address); //without colons
+            ipAddress.FullAddressNoCols = IpConveter.CalcFullAddress(ipAddress.Address); // Without colons
             ipAddress.FullAddressCols = IpConveter.AddColons(ipAddress.FullAddressNoCols);
-            _logger.LogInformation("Full addr: " + ipAddress.FullAddressCols);
-
+            ipAddress.ShortAddress = IpConveter.ShortenAddress(ipAddress.FullAddressCols) + "/" + ipAddress.Mask;
             ipAddress.IPNumber = BigInteger.Parse(ipAddress.FullAddressNoCols, System.Globalization.NumberStyles.AllowHexSpecifier);
-            _logger.LogInformation("IpNumber: " + ipAddress.IPNumber);
-
             ipAddress = IpConveter.CalcRange(ipAddress);
+            IpConveter.CompareAddresses(ipAddress);
 
-            _logger.LogInformation("StartAddr: " + ipAddress.NetworkRangeStart);
-            _logger.LogInformation("EndAddr: " + ipAddress.NetworkRangeEnd);
-            _logger.LogInformation("Total addresses: " + ipAddress.TotalIPAddresses);
-            _logger.LogInformation("Shorten address: " + IpConveter.ShortenAddress(IpConveter.AddColons(ipAddress.FullAddressNoCols)));
+            Console.WriteLine("IP address: " + ipAddress.Address + "/" + ipAddress.Mask);
+            Console.WriteLine("Mask: " + ipAddress.Mask);
+            Console.WriteLine("Full IP address: " + IpConveter.AddColons(IpConveter.CalcFullAddress(ipAddress.Address)));
+            Console.WriteLine("Short IP addres: " + ipAddress.ShortAddress);
+            Console.WriteLine("Network: " + ipAddress.Network);
+            Console.WriteLine("Network range: " + IpConveter.AddColons(IpConveter.CalcFullAddress(ipAddress.NetworkRangeStart))
+                + " - " + IpConveter.AddColons(IpConveter.CalcFullAddress(ipAddress.NetworkRangeEnd)));
+            Console.WriteLine("Total IP addresses: " + ipAddress.TotalIPAddresses);
+            Console.WriteLine("Previous full address: " + IpConveter.AddColons(IpConveter.CalcFullAddress(ipAddress.PreviousAddress)));
+            Console.WriteLine("Next full address: " + IpConveter.AddColons(IpConveter.CalcFullAddress(ipAddress.NextAddress)));
+            Console.WriteLine("Adjacent subnets: ");
+            foreach(string addr in ipAddress.AdjacentAddresses)
+            {
+                Console.WriteLine(addr);
+            }
 
         }
     }

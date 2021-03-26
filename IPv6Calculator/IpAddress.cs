@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace IPv6Calculator
 {
@@ -8,6 +9,11 @@ namespace IPv6Calculator
         /// IPv6 address, e.g. 2a01:1d8:2:280::
         /// </summary>
         public string Address { get; set; }
+
+        /// <summary>
+        /// IPv6 shorten address
+        /// </summary>
+        public string ShortAddress { get; set; }
 
         /// <summary>
         /// Full IPv6 address without colums, e.g. 2a0101d8000202800000000000000000
@@ -58,6 +64,21 @@ namespace IPv6Calculator
         /// The amount of total IP addresses, e.g. 2 for 2a01:1d8:2:280::/127
         /// </summary>
         public BigInteger TotalIPAddresses { get; set; }
+
+        /// <summary>
+        /// Adjacent previous IPv6 address.
+        /// </summary>
+        public string PreviousAddress { get; set; }
+
+        /// <summary>
+        /// Adjacent next IPv6 address.
+        /// </summary>
+        public string NextAddress { get; set; }
+
+        /// <summary>
+        /// List of the adjacent IPv6 addresses with difference marked.
+        /// </summary>
+        public List<string> AdjacentAddresses { get; set; }
 
         public IpAddress(string address)
         {
