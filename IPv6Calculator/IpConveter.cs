@@ -11,6 +11,11 @@ namespace IPv6Calculator
 {
     public static class IpConveter
     {
+        /// <summary>
+        /// Validates if provided address is valid IPv6 address.
+        /// </summary>
+        /// <param name="input">Input argument provided by user.</param>
+        /// <returns>True if address is valid, false otherwise.</returns>
         public static bool ValidateAddress(string input)
         {
             try
