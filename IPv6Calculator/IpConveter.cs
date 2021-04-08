@@ -43,6 +43,11 @@ namespace IPv6Calculator
             if (string.IsNullOrEmpty(address))
                 return "00000000000000000000000000000000";
 
+            if (address.Contains('/'))
+            {
+                address = address.Split('/')[0];
+            }
+
             string[] fullAddress = new string[8] { "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000" };
 
             address = address.Trim();
@@ -144,6 +149,7 @@ namespace IPv6Calculator
             mask >>= (ipAddress.Mask); // Host mask
             ipAddress.NetworkRangeEndNumber = (ipAddress.IPNumber | mask);
             mask = ~mask; // Net mask
+
             ipAddress.NetworkRangeStartNumber = (ipAddress.IPNumber & mask);
 
             ipAddress.Network = HexShortAddress((ipAddress.IPNumber & mask), ipAddress.Mask).Split('/')[0]; // Split for removing net mask from string
@@ -199,11 +205,18 @@ namespace IPv6Calculator
             string prevAddr = ipAddress.PreviousAddress;
             string nextAddr = ipAddress.NextAddress;
 
+            string thirdAddress_v1 = MarkAddressesDifference(addr, nextAddr);
+            string thirdAddress_v2 = MarkAddressesDifference(prevAddr, nextAddr);
+            int minIndex = Math.Min(thirdAddress_v1.IndexOf(' '), thirdAddress_v2.IndexOf(' '));
+            int maxIndex = Math.Max(thirdAddress_v1.LastIndexOf(' '), thirdAddress_v2.LastIndexOf(' '));
+            string thirdAddr = nextAddr.Insert(minIndex, " ");
+            thirdAddr = thirdAddr.Insert(maxIndex, " ");
+
             ipAddress.AdjacentAddresses = new List<string>()
             {
                 MarkAddressesDifference(addr, prevAddr),
                 MarkAddressesDifference(prevAddr, addr),
-                MarkAddressesDifference(addr, nextAddr)
+                thirdAddr
             };
         }
 
